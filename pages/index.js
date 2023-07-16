@@ -1,8 +1,107 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from '../styles/Kanban.module.css';
+import { useState, useEffect } from 'react';
+
+const TaskPill = ({ todo, dragCallback }) => {
+  return (
+    <div
+      key={todo.id}
+      className={styles.pill}
+      draggable
+      onDragStart={(event) => dragCallback(event, todo)}
+    >
+      <h3>{todo.type}</h3>
+      <p>{todo.description}</p>
+    </div>
+  );
+};
+
+const KanbanColumn = ({
+  children,
+  columnTitle,
+  status,
+  handleDragOverCallback,
+  handleDropCallback,
+  handleDragStartCallback,
+  handleDragEnterCallback,
+  handleDragEndCallback,
+}) => {
+  return (
+    <div
+      className={styles.column}
+      onDragOver={handleDragOverCallback}
+      onDrop={(event) => handleDropCallback(event, status)}
+    >
+      <h2>{columnTitle}</h2>
+      <div className={styles.cards}>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+const sortTasksByPriority = (tasks) => {
+  return tasks.sort((a, b) => a.priority - b.priority);
+};
 
 export default function Home() {
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/todos')
+      .then((response) => response.json())
+      .then((data) => {
+        setTodos(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching todos:', error);
+      });
+  }, []);
+
+  const getColumnTodos = (status) => {
+    const columnTodos = todos.filter((todo) => todo.status === status);
+    return sortTasksByPriority(columnTodos);
+  };
+
+  const handleDragStart = (event, todo) => {
+    event.dataTransfer.setData('text/plain', JSON.stringify(todo));
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event, status) => {
+    event.preventDefault();
+    const droppedTodo = JSON.parse(event.dataTransfer.getData('text/plain'));
+
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === droppedTodo.id) {
+        return { ...todo, status };
+      }
+      return todo;
+    });
+
+    setTodos(updatedTodos);
+
+    fetch(`http://localhost:3001/todos/${droppedTodo.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...droppedTodo, status }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Task status updated successfully:', data);
+      })
+      .catch((error) => {
+        console.error('Error updating task status:', error);
+      });
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -12,58 +111,47 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <h1 className={styles.title}>Kanban Board</h1>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
+        <div className={styles.kanban}>
+          <KanbanColumn
+            columnTitle="To Do"
+            status="todo"
+            handleDragOverCallback={handleDragOver}
+            handleDropCallback={handleDrop}
           >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+            {getColumnTodos('todo').map((todo) => (
+              <TaskPill key={todo.id} todo={todo} dragCallback={handleDragStart} />
+            ))}
+          </KanbanColumn>
 
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
+          <KanbanColumn
+            columnTitle="In Progress"
+            status="in-progress"
+            handleDragOverCallback={handleDragOver}
+            handleDropCallback={handleDrop}
           >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+            {getColumnTodos('in-progress').map((todo) => (
+              <TaskPill key={todo.id} todo={todo} dragCallback={handleDragStart} />
+            ))}
+          </KanbanColumn>
+
+          <KanbanColumn
+            columnTitle="Done"
+            status="done"
+            handleDragOverCallback={handleDragOver}
+            handleDropCallback={handleDrop}
+          >
+            {getColumnTodos('done').map((todo) => (
+              <TaskPill key={todo.id} todo={todo} dragCallback={handleDragStart} />
+            ))}
+          </KanbanColumn>
         </div>
       </main>
 
       <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
+        <p>Recipes</p>
       </footer>
     </div>
-  )
+  );
 }
