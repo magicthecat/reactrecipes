@@ -5,63 +5,63 @@
       "type": "Task 1",
       "description": "Description of Task 1",
       "status": "todo",
-      "priority": 1.5948269783
+      "priority": 1
     },
     {
       "id": 2,
       "type": "Task 2",
       "description": "Description of Task 2",
-      "status": "todo",
-      "priority": 2.5123904296
+      "status": "in-progress",
+      "priority": 1
     },
     {
       "id": 3,
       "type": "Task 3",
       "description": "Description of Task 3",
-      "status": "done",
-      "priority": 3.7318947621
+      "status": "blocked",
+      "priority": 1
     },
     {
       "id": 4,
       "type": "Task 4",
       "description": "Description of Task 4",
-      "status": "todo",
-      "priority": 1.2157934467
+      "status": "blocked",
+      "priority": 1
     },
     {
       "id": 5,
       "type": "Task 5",
       "description": "Description of Task 5",
-      "status": "todo",
-      "priority": 2.7895263845
+      "status": "blocked",
+      "priority": 1
     },
     {
       "id": 6,
       "type": "Task 6",
       "description": "Description of Task 6",
-      "status": "todo",
-      "priority": 3.1629374187
+      "status": "done",
+      "priority": 1
     },
     {
       "id": 7,
       "type": "Task 7",
       "description": "Description of Task 7",
-      "status": "done",
-      "priority": 1.4527618792
+      "status": "blocked",
+      "priority": 2
     },
     {
       "id": 8,
       "type": "Task 8",
       "description": "Description of Task 8",
-      "status": "todo",
-      "priority": 2.9875642751
+      "status": "done",
+      "priority": 2
     },
     {
       "id": 9,
       "type": "Task 9",
       "description": "Description of Task 9",
-      "status": "in-progress",
-      "priority": 3.7238104936
+      "status": "done",
+      "priority": 3
     }
   ]
 }

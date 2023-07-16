@@ -74,9 +74,8 @@
 }
 
 .card,
-.pill,
-.priorityPill {
-    margin: 3rem;
+.pill {
+    margin: 1rem;
     padding: 1.5rem;
     text-align: left;
     color: inherit;
@@ -118,22 +117,54 @@
 
 .kanban {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     width: 80%;
-    /* Set kanban board width to 80% of viewport */
 }
 
+.swimlane {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+@media (max-width: 600px) {
+    .swimlane {
+        flex-direction: row;
+    }
+}
+
+
+
 .column {
-    flex: 1;
-    margin: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    width: 200px;
     padding: 1rem;
     background-color: #f0f0f0;
     border-radius: 10px;
     overflow-y: auto;
-    /* Enable vertical scrolling if content exceeds column height */
     max-height: calc(100vh - 10rem);
-    /* Adjust column height based on viewport height minus margins and padding */
+    margin-bottom: 0.5rem;
 }
+
+.headingColumn {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 10px;
+    width: 200px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    overflow-y: auto;
+    max-height: calc(100vh - 10rem);
+    margin-bottom: 2rem;
+}
+
+.column h2 {
+    margin-bottom: 1rem;
+}
+
 
 .column h2 {
     margin-bottom: 1rem;
