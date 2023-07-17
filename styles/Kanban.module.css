@@ -69,6 +69,26 @@
     max-width: 800px;
 }
 
+.pill {
+    background-color: aliceblue;
+    margin: 0.5rem;
+    padding: 1.5rem;
+    position: relative;
+    /* Add position relative */
+}
+
+.pill textarea {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    z-index: 10;
+
+
+}
+
+
 .card,
 .pill {
     margin: 1rem;
@@ -150,12 +170,41 @@
     width: 200px;
     padding-left: 1rem;
     padding-right: 1rem;
-    background-color: #f0f0f0;
+    background-color: #a29be0;
     border-radius: 10px;
     overflow-y: auto;
     max-height: calc(100vh - 10rem);
     margin-bottom: 2rem;
 }
+
+.priorityColumn {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 10px;
+    width: 200px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: #e9cfa7;
+    border-radius: 10px;
+    overflow-y: auto;
+    height: 150px;
+    margin-bottom: 2rem;
+}
+
+.blankCell {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 10px;
+    width: 200px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 10px;
+    overflow-y: auto;
+    height: 150px;
+    margin-bottom: 2rem;
+
+}
+
 
 .column h2 {
     margin-bottom: 1rem;
@@ -188,6 +237,18 @@
     font-size: 1rem;
     border-radius: 5px;
     background-color: #0070f3;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+
+.download button {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: #00f300;
     color: #fff;
     border: none;
     cursor: pointer;

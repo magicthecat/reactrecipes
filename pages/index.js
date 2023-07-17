@@ -1,8 +1,22 @@
 import Head from 'next/head';
 import styles from '../styles/Kanban.module.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useTransitoryItemsData } from '../customHooks/transitoryItemsHook';
+import { ConvertToXLSX } from '../utils/convertToXls';
 
+const DownloadDataButton = ({ data, filename }) => {
+  const handleClick = () => {
+    ConvertToXLSX({ data, filename });
+  };
 
+  return (
+    <div className={styles.download}>
+      <button onClick={handleClick}>
+        Download Data
+      </button>
+    </div>
+  );
+};
 
 const AddTaskForm = ({ addTask }) => {
   const [newTask, setNewTask] = useState('');
@@ -45,31 +59,56 @@ const AddTaskForm = ({ addTask }) => {
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}
         placeholder="Enter task description"
+        required
       />
       <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 };
 
+const TaskPill = ({ todo, dragCallback, updateTaskDescription }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedDescription, setUpdatedDescription] = useState(todo.description);
 
+  const handleDoubleClick = () => {
+    setIsEditing(true);
+  };
 
+  const handleInputChange = (event) => {
+    setUpdatedDescription(event.target.value);
+  };
 
+  const handleBlur = () => {
+    // Call the updateTaskDescription callback to update the description in the database or perform any necessary API call
+    updateTaskDescription(todo.id, updatedDescription);
 
-const TaskPill = ({ todo, dragCallback }) => {
+    setIsEditing(false);
+  };
+
   return (
-    <div
-      key={todo.id}
-      className={styles.pill}
-      draggable
-      onDragStart={(event) => dragCallback(event, todo)}
-    >
+    <div onDoubleClick={handleDoubleClick} key={todo.id} className={styles.pill} draggable onDragStart={(event) => dragCallback(event, todo)}>
       <h3>{todo.type}</h3>
-      <p>{todo.description}</p>
+
+      {isEditing ? (
+        <textarea
+          type="text"
+          value={updatedDescription}
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          autoFocus
+        />
+
+
+      ) : (
+        <div>
+          <p>{todo.description}</p>
+        </div>
+      )}
     </div>
   );
 };
 
-const Swimlane = ({ statusArray, handleDragOver, handleDragStart, handleDrop, getItemsCallback, priorityFilter }) => {
+const Swimlane = ({ statusArray, handleDragOver, handleDragStart, handleDrop, getItemsCallback, priorityFilter, updateTaskDescription }) => {
   const handleColumnDrop = (event, status) => {
     handleDrop(event, status, priorityFilter);
   };
@@ -81,10 +120,11 @@ const Swimlane = ({ statusArray, handleDragOver, handleDragStart, handleDrop, ge
           key={status.status}
           status={status.status}
           handleDragOverCallback={handleDragOver}
-          handleDropCallback={handleColumnDrop} // Use the new handleColumnDrop function
+          handleDropCallback={handleColumnDrop}
+
         >
           {getItemsCallback(status.status, priorityFilter).map((todo) => (
-            <TaskPill key={todo.id} todo={todo} dragCallback={handleDragStart} />
+            <TaskPill key={todo.id} todo={todo} dragCallback={handleDragStart} updateTaskDescription={updateTaskDescription} />
           ))}
         </KanbanColumn>
       ))}
@@ -113,7 +153,6 @@ const KanbanColumn = ({
   );
 };
 
-
 const HeadingColumn = ({
   columnTitle,
 
@@ -128,6 +167,31 @@ const HeadingColumn = ({
     </div>
   );
 };
+
+const PriorityColumn = ({
+  columnTitle,
+
+}) => {
+
+  let conditionalStyles = styles.priorityColumn
+
+  if (columnTitle === "") {
+    conditionalStyles = styles.blankCell
+  }
+
+
+
+  return (
+    <div
+      className={conditionalStyles}
+
+    >
+      <h2>{columnTitle}</h2>
+
+    </div>
+  );
+};
+
 
 const HeadingSwimLane = (statusArray) => {
 
@@ -144,7 +208,6 @@ const HeadingSwimLane = (statusArray) => {
     </>
   );
 };
-
 
 const NewRowContainer = ({ children }) => {
   const containerStyle = {
@@ -165,29 +228,9 @@ const NewRowContainer = ({ children }) => {
   );
 };
 
-function useFetchData() {
-  const [todos, setTodos] = useState([]);
-
-
-  useEffect(() => {
-    fetch('http://localhost:3001/todos')
-      .then((response) => response.json())
-      .then((data) => {
-        setTodos(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching todos:', error);
-      });
-  }, []);
-
-  return [todos, setTodos];
-}
-
-
-
 
 export default function Home() {
-  const [todos, setTodos] = useFetchData()
+  const [todos, addTask, updateTaskDescription, handleStatusUpdate] = useTransitoryItemsData('http://localhost:3001/todos')
 
 
   const kanbanProperties = {
@@ -195,30 +238,17 @@ export default function Home() {
       { status: 'todo', name: 'To Do' },
       { status: 'blocked', name: 'Blocked' },
       { status: 'in-progress', name: 'In Progress' },
+      { status: 'approvals', name: 'In Approvals' },
       { status: 'done', name: 'Done' }
     ],
     priorities: [
       { priority: 1, name: 'Must Have' },
       { priority: 2, name: 'Should Have' },
-      { priority: 3, name: 'Could Have' }
+      { priority: 3, name: 'Could Have' },
+      { priority: 4, name: "Won't Have" }
     ]
   }
 
-  const addTask = (newTask) => {
-    setTodos([...todos, newTask]);
-    // Make a POST request to add the new task item to the database
-    fetch('http://localhost:3001/todos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newTask),
-    })
-      .then((response) => response.json())
-      .catch((error) => {
-        console.error('Error adding new task:', error);
-      });
-  };
 
   const getColumnTodos = (status, priority) => {
     const columnTodos = todos.filter((todo) => todo.status === status && todo.priority === priority);
@@ -233,35 +263,6 @@ export default function Home() {
     event.preventDefault();
   };
 
-  const handleDrop = (event, status, priority) => {
-    event.preventDefault();
-    const droppedTodo = JSON.parse(event.dataTransfer.getData('text/plain'));
-
-    const updatedTodos = todos.map((todo) => {
-      if (todo.id === droppedTodo.id) {
-        return { ...todo, status, priority: priority };
-      }
-      return todo;
-    });
-
-    setTodos(updatedTodos);
-
-    fetch(`http://localhost:3001/todos/${droppedTodo.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ ...droppedTodo, status, priority: priority }),
-    })
-      .then((response) => response.json())
-
-      .catch((error) => {
-        console.error('Error updating task status and priority:', error);
-      });
-  };
-
-
-
   return (
     <div className={styles.container}>
       <Head>
@@ -271,25 +272,30 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1 className={styles.title}>Kanban Board</h1>
+        <h1>Kanban Board</h1>
+        <DownloadDataButton data={todos} filename="myData" />
+
         <AddTaskForm addTask={addTask} />
 
         <div className={styles.kanban}>
           <NewRowContainer>
+            <PriorityColumn columnTitle="" />
             <HeadingSwimLane
               statusArray={kanbanProperties.statuses}
             />
           </NewRowContainer>
           {kanbanProperties.priorities.map((priority) => (
             <NewRowContainer>
+              <PriorityColumn columnTitle={priority.name} />
               <Swimlane
                 key={priority.priority}
                 statusArray={kanbanProperties.statuses}
                 handleDragOver={handleDragOver}
-                handleDrop={handleDrop}
+                handleDrop={handleStatusUpdate}
                 handleDragStart={handleDragStart}
                 getItemsCallback={getColumnTodos}
                 priorityFilter={priority.priority}
+                updateTaskDescription={updateTaskDescription}
               />
             </NewRowContainer>
           ))}
