@@ -4,6 +4,56 @@ import { useState, useEffect } from 'react';
 
 
 
+const AddTaskForm = ({ addTask }) => {
+  const [newTask, setNewTask] = useState('');
+
+  const handleSubmit = () => {
+    // Fetch the existing tasks to determine the next available ID
+    fetch('http://localhost:3001/todos')
+      .then((response) => response.json())
+      .then((data) => {
+        // Find the maximum ID from the existing tasks
+        const maxId = Math.max(...data.map((task) => task.id));
+
+        const newId = maxId + 1;
+
+        // Create a new task object with the next ID
+        const newTaskItem = {
+          id: newId,
+          type: 'Task ' + newId,
+          description: newTask,
+          status: 'todo',
+          priority: 3,
+        };
+
+        // Call the addTask function from the parent component to add the new task
+        addTask(newTaskItem);
+
+        // Clear the new task input
+        setNewTask('');
+      })
+      .catch((error) => {
+        console.error('Error fetching existing tasks:', error);
+      });
+  };
+
+
+
+  return (
+    <div className={styles.addTask} >
+      <textarea
+        value={newTask}
+        onChange={(e) => setNewTask(e.target.value)}
+        placeholder="Enter task description"
+      />
+      <button onClick={handleSubmit}>Submit</button>
+    </div>
+  );
+};
+
+
+
+
 
 const TaskPill = ({ todo, dragCallback }) => {
   return (
@@ -124,7 +174,6 @@ function useFetchData() {
       .then((response) => response.json())
       .then((data) => {
         setTodos(data);
-        console.log(data);
       })
       .catch((error) => {
         console.error('Error fetching todos:', error);
@@ -154,6 +203,22 @@ export default function Home() {
       { priority: 3, name: 'Could Have' }
     ]
   }
+
+  const addTask = (newTask) => {
+    setTodos([...todos, newTask]);
+    // Make a POST request to add the new task item to the database
+    fetch('http://localhost:3001/todos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newTask),
+    })
+      .then((response) => response.json())
+      .catch((error) => {
+        console.error('Error adding new task:', error);
+      });
+  };
 
   const getColumnTodos = (status, priority) => {
     const columnTodos = todos.filter((todo) => todo.status === status && todo.priority === priority);
@@ -205,8 +270,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main>
         <h1 className={styles.title}>Kanban Board</h1>
+        <AddTaskForm addTask={addTask} />
 
         <div className={styles.kanban}>
           <NewRowContainer>

@@ -1,16 +1,12 @@
 .container {
     padding: 0 2rem;
-}
-
-.main {
-    min-height: 100vh;
-    padding: 4rem 0;
-    flex: 1;
+    margin: 0 auto;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+
+
 
 .footer {
     display: flex;
@@ -175,4 +171,28 @@
         width: 100%;
         flex-direction: column;
     }
+}
+
+.addTask textarea {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: vertical;
+}
+
+.addTask button {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: #0070f3;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.addTask button:hover {
+    background-color: #0053a3;
 }

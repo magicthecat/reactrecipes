@@ -11,7 +11,7 @@
       "id": 2,
       "type": "Task 2",
       "description": "Description of Task 2",
-      "status": "in-progress",
+      "status": "todo",
       "priority": 1
     },
     {
@@ -32,7 +32,7 @@
       "id": 5,
       "type": "Task 5",
       "description": "Description of Task 5",
-      "status": "blocked",
+      "status": "in-progress",
       "priority": 1
     },
     {
@@ -60,6 +60,27 @@
       "id": 9,
       "type": "Task 9",
       "description": "Description of Task 9",
+      "status": "done",
+      "priority": 3
+    },
+    {
+      "id": 10,
+      "type": "Task 10",
+      "description": "chicken pie",
+      "status": "done",
+      "priority": 1
+    },
+    {
+      "id": 11,
+      "type": "Task 11",
+      "description": "new job",
+      "status": "todo",
+      "priority": 3
+    },
+    {
+      "id": 12,
+      "type": "Task 12",
+      "description": "final lunch task",
       "status": "done",
       "priority": 3
     }
