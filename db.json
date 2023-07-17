@@ -16,7 +16,7 @@
     },
     {
       "description": "Goats",
-      "status": "done",
+      "status": "todo",
       "type": "Task 3",
       "priority": 4,
       "id": 3
@@ -32,7 +32,7 @@
       "id": 5,
       "type": "Task 5",
       "description": "Description of kittens!?",
-      "status": "blocked",
+      "status": "todo",
       "priority": 1
     },
     {
@@ -95,14 +95,14 @@
       "id": 14,
       "type": "Task 14",
       "description": "using chickens",
-      "status": "done",
+      "status": "todo",
       "priority": 4
     },
     {
       "id": 15,
       "type": "Task 15",
       "description": "hello 1046",
-      "status": "done",
+      "status": "todo",
       "priority": 4
     },
     {
