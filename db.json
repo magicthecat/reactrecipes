@@ -1,116 +1,130 @@
 {
-  "todos": [
+  "projects": [
     {
       "id": 1,
-      "type": "Task 1",
-      "description": "COWS!!\n",
+      "name": "Animal Project",
+      "description": "A project to study and document various animal species.",
+      "status": "todo",
+      "priority": 1
+    },
+    {
+      "id": 2,
+      "name": "Plant Project",
+      "description": "A project to research and explore different plant species.",
+      "status": "in-progress",
+      "priority": 2
+    }
+  ],
+  "epics": [
+    {
+      "id": 1,
+      "projectId": 1,
+      "name": "Animal Sound R&D",
+      "description": "Research and record different animal sounds.",
+      "status": "in-progress",
+      "priority": 1
+    },
+    {
+      "id": 2,
+      "projectId": 1,
+      "name": "Animal Habitat R&D",
+      "description": "Study and document the natural habitats of various animals.",
+      "status": "todo",
+      "priority": 2
+    },
+    {
+      "id": 3,
+      "projectId": 2,
+      "name": "Plan Features R&D",
+      "description": "Classify and categorize different plant species based on their characteristics. Yay!",
+      "status": "todo",
+      "priority": 1
+    }
+  ],
+  "workItems": [
+    {
+      "id": 1,
+      "epicId": 1,
+      "name": "Record Cow Sounds",
+      "description": "Visit a farm and capture various cow sounds. Moo!",
       "status": "blocked",
       "priority": 1
     },
     {
       "id": 2,
-      "type": "Task 2",
-      "description": "Task Chicken",
-      "status": "blocked",
+      "epicId": 1,
+      "name": "Record Chicken Sounds",
+      "description": "Visit a poultry farm and record different chicken sounds.",
+      "status": "done",
       "priority": 2
     },
     {
-      "description": "Goats",
-      "status": "todo",
-      "type": "Task 3",
-      "priority": 4,
-      "id": 3
+      "id": 3,
+      "epicId": 1,
+      "name": "Record Lion Roar",
+      "description": "Travel to a zoo and capture the powerful roar of a lion.",
+      "status": "approvals",
+      "priority": 3
     },
     {
       "id": 4,
-      "type": "Task 4",
-      "description": "Chickens?",
-      "status": "todo",
-      "priority": 1
+      "epicId": 2,
+      "name": "Research Arctic Wildlife",
+      "description": "Explore the Arctic region to understand the unique habitats of polar bears, penguins, and other Arctic animals.",
+      "status": "blocked",
+      "priority": 4
     },
     {
       "id": 5,
-      "type": "Task 5",
-      "description": "Description of kittens!?",
-      "status": "todo",
+      "epicId": 2,
+      "name": "Study Rainforest Ecosystem",
+      "description": "Conduct research on the rainforest ecosystem and its diverse animal habitats.",
+      "status": "blocked",
       "priority": 1
     },
     {
       "id": 6,
-      "type": "Task 6",
-      "description": "Lizards are 6",
-      "status": "todo",
-      "priority": 2
-    },
-    {
-      "id": 7,
-      "type": "Task 7",
-      "description": "Description of Task 7",
-      "status": "done",
-      "priority": 1
-    },
-    {
-      "id": 8,
-      "type": "Task 8",
-      "description": "Description of Task 8",
-      "status": "done",
-      "priority": 2
-    },
-    {
-      "id": 9,
-      "type": "Task 9",
-      "description": "CHickens",
-      "status": "todo",
-      "priority": 2
-    },
-    {
-      "id": 10,
-      "type": "Task 10",
-      "description": "chicken pie",
-      "status": "done",
-      "priority": 1
-    },
-    {
-      "id": 11,
-      "type": "Task 11",
-      "description": "new job",
-      "status": "todo",
-      "priority": 3
-    },
-    {
-      "id": 12,
-      "type": "Task 12",
-      "description": "final lunch task",
+      "epicId": 3,
+      "name": "Identify Plant Families",
+      "description": "Study different plant families and classify plants accordingly.",
       "status": "approvals",
       "priority": 1
     },
     {
-      "id": 13,
-      "type": "Task 13",
-      "description": "using custom hook",
-      "status": "done",
+      "id": 7,
+      "epicId": 3,
+      "name": "Document Medicinal Plants",
+      "description": "Research and compile information about various medicinal plants!",
+      "status": "blocked",
+      "priority": 2
+    },
+    {
+      "id": 8,
+      "name": "Task8",
+      "description": "adsfdsaf",
+      "status": "approvals",
+      "priority": 2
+    },
+    {
+      "id": 9,
+      "name": "Task9",
+      "description": "1140",
+      "status": "todo",
       "priority": 3
     },
     {
-      "id": 14,
-      "type": "Task 14",
-      "description": "using chickens",
+      "id": 10,
+      "name": "Task 10",
+      "description": "1140 B",
       "status": "todo",
-      "priority": 4
+      "priority": 3
     },
     {
-      "id": 15,
-      "type": "Task 15",
-      "description": "hello 1046",
-      "status": "todo",
-      "priority": 4
-    },
-    {
-      "id": 16,
-      "type": "Task 16",
-      "description": "before bedtime!!!",
+      "id": 11,
+      "name": "Task 11",
+      "description": "One Last Item",
       "status": "done",
-      "priority": 4
+      "priority": 3
     }
   ]
 }

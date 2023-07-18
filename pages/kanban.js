@@ -1,112 +1,13 @@
 import Head from 'next/head';
 import styles from '../styles/Kanban.module.css';
-import { useState } from 'react';
 import { useTransitoryItemsData } from '../customHooks/transitoryItemsHook';
 import { ConvertToXLSX } from '../utils/convertToXls';
-
-const DownloadDataButton = ({ data, filename }) => {
-  const handleClick = () => {
-    ConvertToXLSX({ data, filename });
-  };
-
-  return (
-    <div className={styles.download}>
-      <button onClick={handleClick}>
-        Download Data
-      </button>
-    </div>
-  );
-};
-
-const AddTaskForm = ({ addTask }) => {
-  const [newTask, setNewTask] = useState('');
-
-  const handleSubmit = () => {
-    // Fetch the existing tasks to determine the next available ID
-    fetch('http://localhost:3001/todos')
-      .then((response) => response.json())
-      .then((data) => {
-        // Find the maximum ID from the existing tasks
-        const maxId = Math.max(...data.map((task) => task.id));
-
-        const newId = maxId + 1;
-
-        // Create a new task object with the next ID
-        const newTaskItem = {
-          id: newId,
-          type: 'Task ' + newId,
-          description: newTask,
-          status: 'todo',
-          priority: 3,
-        };
-
-        // Call the addTask function from the parent component to add the new task
-        addTask(newTaskItem);
-
-        // Clear the new task input
-        setNewTask('');
-      })
-      .catch((error) => {
-        console.error('Error fetching existing tasks:', error);
-      });
-  };
+import { AddItem } from '../components/addItem';
+import { DownloadDataButton } from '../components/downloadDataButton';
+import { ItemCard } from '../components/itemCard';
+import { NewRowContainer } from '../components/newRowContainer';
 
 
-
-  return (
-    <div className={styles.addTask} >
-      <textarea
-        value={newTask}
-        onChange={(e) => setNewTask(e.target.value)}
-        placeholder="Enter task description"
-        required
-      />
-      <button onClick={handleSubmit}>Submit</button>
-    </div>
-  );
-};
-
-const TaskPill = ({ todo, dragCallback, updateTaskDescription }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [updatedDescription, setUpdatedDescription] = useState(todo.description);
-
-  const handleDoubleClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleInputChange = (event) => {
-    setUpdatedDescription(event.target.value);
-  };
-
-  const handleBlur = () => {
-    // Call the updateTaskDescription callback to update the description in the database or perform any necessary API call
-    updateTaskDescription(todo.id, updatedDescription);
-
-    setIsEditing(false);
-  };
-
-  return (
-    <div onDoubleClick={handleDoubleClick} key={todo.id} className={styles.pill} draggable onDragStart={(event) => dragCallback(event, todo)}>
-      <h3>{todo.type}</h3>
-
-      {isEditing ? (
-        <textarea
-          type="text"
-          value={updatedDescription}
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-          autoFocus
-        />
-
-
-      ) : (
-        <div>
-          <p>{todo.description}</p>
-        </div>
-      )}
-    </div>
-  );
-};
 
 const Swimlane = ({ statusArray, handleDragOver, handleDragStart, handleDrop, getItemsCallback, priorityFilter, updateTaskDescription }) => {
   const handleColumnDrop = (event, status) => {
@@ -124,7 +25,7 @@ const Swimlane = ({ statusArray, handleDragOver, handleDragStart, handleDrop, ge
 
         >
           {getItemsCallback(status.status, priorityFilter).map((todo) => (
-            <TaskPill key={todo.id} todo={todo} dragCallback={handleDragStart} updateTaskDescription={updateTaskDescription} />
+            <ItemCard key={todo.id} item={todo} dragCallback={handleDragStart} updateItemDescription={updateTaskDescription} />
           ))}
         </KanbanColumn>
       ))}
@@ -209,29 +110,10 @@ const HeadingSwimLane = (statusArray) => {
   );
 };
 
-const NewRowContainer = ({ children }) => {
-  const containerStyle = {
-    display: 'flex',
-    flexWrap: 'wrap',
-  };
 
-  const childStyle = {
-    flexBasis: '100%',
-    marginBottom: '1rem',
-  };
+export default function KanbanBoard({ endpoint }) {
 
-  return (
-    <div style={containerStyle}>
-
-      {children}
-    </div>
-  );
-};
-
-
-export default function KanbanBoard() {
-  const [todos, addTask, updateTaskDescription, handleStatusUpdate] = useTransitoryItemsData('http://localhost:3001/todos')
-
+  const [todos, addTask, updateTaskDescription, handleStatusUpdate] = useTransitoryItemsData(`http://localhost:3001/${endpoint}`)
 
   const kanbanProperties = {
     statuses: [
@@ -248,6 +130,11 @@ export default function KanbanBoard() {
       { priority: 4, name: "Won't Have" }
     ]
   }
+
+  const handleDownloadClick = ({ data, filename }) => {
+    ConvertToXLSX({ data, filename });
+  };
+
 
 
   const getColumnTodos = (status, priority) => {
@@ -273,9 +160,9 @@ export default function KanbanBoard() {
 
       <main>
         <h1>Kanban Board</h1>
-        <DownloadDataButton data={todos} filename="myData" />
+        <DownloadDataButton handleDownloadClick={() => handleDownloadClick({ data: todos, filename: "myData" })} />
 
-        <AddTaskForm addTask={addTask} />
+        <AddItem addItemCallback={addTask} endpoint="workItems" itemType={{ type: "Task" }} />
 
         <div className={styles.kanban}>
           <NewRowContainer>
