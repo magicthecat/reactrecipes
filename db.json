@@ -78,23 +78,23 @@
       "id": 5,
       "epicId": 2,
       "name": "Study Rainforest Ecosystem",
-      "description": "Conduct research on the rainforest ecosystem and its diverse animal habitats.",
-      "status": "blocked",
+      "description": "Conduct research on the rainforest ecosystem and its diverse animal habitats, like magical toads.",
+      "status": "done",
       "priority": 1
     },
     {
       "id": 6,
       "epicId": 3,
       "name": "Identify Plant Families",
-      "description": "Study different plant families and classify plants accordingly.",
-      "status": "approvals",
+      "description": "Study different plant families and classify plants accordingly?!",
+      "status": "todo",
       "priority": 1
     },
     {
       "id": 7,
       "epicId": 3,
       "name": "Document Medicinal Plants",
-      "description": "Research and compile information about various medicinal plants!",
+      "description": "Research and compile information about various medicinal plants!?",
       "status": "blocked",
       "priority": 2
     },
@@ -102,7 +102,7 @@
       "id": 8,
       "name": "Task8",
       "description": "adsfdsaf",
-      "status": "approvals",
+      "status": "todo",
       "priority": 2
     },
     {

@@ -1,5 +1,5 @@
 import KanbanBoard from "./kanban"
-import ListItems from "../components/listItems"
+import BasicCardGrid from "../components/BasicCardGrid"
 
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
     return (
 
         <>
-            <ListItems endpoint="projects" title="Projects" />
+            <BasicCardGrid endpoint="projects" title="Projects" />
             <KanbanBoard endpoint={endpoint} />
         </>
 

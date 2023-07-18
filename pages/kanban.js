@@ -6,6 +6,7 @@ import { AddItem } from '../components/addItem';
 import { DownloadDataButton } from '../components/downloadDataButton';
 import { ItemCard } from '../components/itemCard';
 import { NewRowContainer } from '../components/newRowContainer';
+import { kanbanConstants } from '../constants/kanbanConstants';
 
 
 
@@ -93,7 +94,6 @@ const PriorityColumn = ({
   );
 };
 
-
 const HeadingSwimLane = (statusArray) => {
 
   return (
@@ -110,31 +110,15 @@ const HeadingSwimLane = (statusArray) => {
   );
 };
 
-
 export default function KanbanBoard({ endpoint }) {
 
   const [todos, addTask, updateTaskDescription, handleStatusUpdate] = useTransitoryItemsData(`http://localhost:3001/${endpoint}`)
 
-  const kanbanProperties = {
-    statuses: [
-      { status: 'blocked', name: 'Blocked' },
-      { status: 'todo', name: 'To Do' },
-      { status: 'in-progress', name: 'In Progress' },
-      { status: 'approvals', name: 'In Approvals' },
-      { status: 'done', name: 'Done' }
-    ],
-    priorities: [
-      { priority: 1, name: 'Must Have' },
-      { priority: 2, name: 'Should Have' },
-      { priority: 3, name: 'Could Have' },
-      { priority: 4, name: "Won't Have" }
-    ]
-  }
+
 
   const handleDownloadClick = ({ data, filename }) => {
     ConvertToXLSX({ data, filename });
   };
-
 
 
   const getColumnTodos = (status, priority) => {
@@ -168,15 +152,15 @@ export default function KanbanBoard({ endpoint }) {
           <NewRowContainer>
             <PriorityColumn columnTitle="" />
             <HeadingSwimLane
-              statusArray={kanbanProperties.statuses}
+              statusArray={kanbanConstants.statuses}
             />
           </NewRowContainer>
-          {kanbanProperties.priorities.map((priority) => (
+          {kanbanConstants.priorities.map((priority) => (
             <NewRowContainer>
               <PriorityColumn columnTitle={priority.name} />
               <Swimlane
                 key={priority.priority}
-                statusArray={kanbanProperties.statuses}
+                statusArray={kanbanConstants.statuses}
                 handleDragOver={handleDragOver}
                 handleDrop={handleStatusUpdate}
                 handleDragStart={handleDragStart}
